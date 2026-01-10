@@ -1,9 +1,10 @@
-import BioTool from '@/components/tools/BioTool';
-import CaptionTool from '@/components/tools/CaptionTool';
-import CommentTool from '@/components/tools/CommentTool';
-import RemixTool from '@/components/tools/RemixTool';
-import RoastTool from '@/components/tools/RoastTool';
-import VisionTool from '@/components/tools/VisionTool';
+import BioTool from '@/frontend/components/tools/BioTool';
+import CaptionTool from '@/frontend/components/tools/CaptionTool';
+import CommentTool from '@/frontend/components/tools/CommentTool';
+import RemixTool from '@/frontend/components/tools/RemixTool';
+import RoastTool from '@/frontend/components/tools/RoastTool';
+import VisionTool from '@/frontend/components/tools/VisionTool';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
@@ -17,6 +18,7 @@ const tools = [
 ];
 
 export default function Dashboard() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('caption');
 
   const ActiveComponent = tools.find(tool => tool.key === activeTab)?.component || (() => null);
@@ -24,7 +26,7 @@ export default function Dashboard() {
   return (
     <View className="flex-1 bg-black">
       <View className="px-6 py-6 border-b border-white/10">
-        <TouchableOpacity onPress={() => {}} className="flex-row items-center gap-2 text-gray-400 mb-4">
+        <TouchableOpacity onPress={() => router.back()} className="flex-row items-center gap-2 text-gray-400 mb-4">
           <Text className="text-gray-400">← Back</Text>
         </TouchableOpacity>
         <Text className="text-2xl font-bold text-white mb-2">AI Content Studio</Text>

@@ -5,7 +5,7 @@ import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import '../global.css';
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme } from '@/frontend/hooks/use-color-scheme';
 
 export const unstable_settings = {
   // anchor removed
@@ -16,7 +16,10 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index"/>
+        <Stack.Screen name="dashboard" options={{ title: 'Dashboard' }} />
+        <Stack.Screen name="wishlist" options={{ title: 'Wishlist' }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
       </Stack>
       <StatusBar style="auto" />

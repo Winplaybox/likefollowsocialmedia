@@ -1,9 +1,9 @@
-import BioTool from '@/frontend/components/tools/BioTool';
-import CaptionTool from '@/frontend/components/tools/CaptionTool';
-import CommentTool from '@/frontend/components/tools/CommentTool';
-import RemixTool from '@/frontend/components/tools/RemixTool';
-import RoastTool from '@/frontend/components/tools/RoastTool';
-import VisionTool from '@/frontend/components/tools/VisionTool';
+import BioTool from '@/app/tools/BioTool';
+import CaptionTool from '@/app/tools/CaptionTool';
+import CommentTool from '@/app/tools/CommentTool';
+import RemixTool from '@/app/tools/RemixTool';
+import RoastTool from '@/app/tools/RoastTool';
+import VisionTool from '@/app/tools/VisionTool';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';

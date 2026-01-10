@@ -1,11 +1,11 @@
+import '@/global.css';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
-import '../global.css';
 
-import { useColorScheme } from '@/frontend/hooks/use-color-scheme';
+import { useColorScheme } from '@/app/hooks/use-color-scheme';
 
 export const unstable_settings = {
   // anchor removed

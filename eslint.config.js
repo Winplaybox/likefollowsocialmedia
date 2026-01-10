@@ -7,4 +7,13 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*'],
   },
+  {
+    files: ['**/*.css'],
+    plugins: {
+      tailwindcss: require('eslint-plugin-tailwindcss'),
+    },
+    rules: {
+      'tailwindcss/no-custom-classname': 'off', // or configure as needed
+    },
+  },
 ]);

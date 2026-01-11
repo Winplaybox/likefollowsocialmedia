@@ -1,11 +1,10 @@
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from '@/app/components/ui/sonner';
+import { useColorScheme } from '@/app/hooks/use-color-scheme';
 import '@/global.css';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/app/hooks/use-color-scheme';
 
 export const unstable_settings = {
   // anchor removed

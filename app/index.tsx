@@ -1,9 +1,7 @@
 import { useRouter } from 'expo-router';
 import { motion } from 'framer-motion';
 import { Bookmark, Image, MessageSquare, Shuffle, Sparkles, Target, UserCircle } from 'lucide-react';
-import { Dimensions, ScrollView } from 'react-native';
-
-const { width } = Dimensions.get('window');
+import { ScrollView } from 'react-native';
 
 export default function Landing() {
   const router = useRouter();

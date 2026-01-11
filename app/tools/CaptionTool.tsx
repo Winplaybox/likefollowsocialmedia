@@ -2,38 +2,41 @@ import { DEFAULT_PLATFORM, DEFAULT_TONE, PLATFORMS, TONES } from '@/app/constant
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
-import { Bookmark, Copy, Loader2, Sparkles } from 'lucide-react';
+import { Bookmark, Copy, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { BACKEND_URL_API } from '../lib/utils';
 
 interface GeneratedResponse {
   result: string;
   character_count: number;
-  platform_limit?: number;
+  platform_limit: number;
 }
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://your-backend-url.com';
-const API = `${BACKEND_URL}/api`;
 
 export default function CaptionTool() {
   const [description, setDescription] = useState('');
   const [platform, setPlatform] = useState(DEFAULT_PLATFORM);
   const [tone, setTone] = useState(DEFAULT_TONE);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<GeneratedResponse | null>(null);
+  const [result, setResult] = useState<GeneratedResponse>({
+    result: '',
+    character_count: 0,
+    platform_limit: PLATFORMS.find(p => p.value === DEFAULT_PLATFORM)?.characterLimit || 0,
+  });
 
   const handleGenerate = async () => {
-    if (!description.trim()) {
+     if (!description.trim()) {
       toast.error('Please describe your content first');
       return;
     }
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/generate-caption`, {
+      const response = await axios.post(`${BACKEND_URL_API}/generate-caption`, {
         content_description: description,
         platform,
-        tone,
+        tone
       });
 
       setResult(response.data);
@@ -55,112 +58,149 @@ export default function CaptionTool() {
     const saved = JSON.parse(await AsyncStorage.getItem('hashtagHeroWishlist') || '[]');
     saved.push({
       id: Date.now(),
-      type: 'Caption Suggestion',
-      content: caption,
-      timestamp: new Date().toISOString(),
+      type: `${platform} Caption`,
+      content: result.result,
+      characterCount: result.character_count,
+      platformLimit: result.platform_limit,
+      timestamp: new Date().toISOString()
     });
     await AsyncStorage.setItem('hashtagHeroWishlist', JSON.stringify(saved));
     toast.success('Saved to wishlist!');
   };
 
   return (
-    <div className="w-full">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">AI Caption Generator</h2>
-        <p className="text-[#A1A1AA] text-sm">Generate engaging captions that drive likes, comments, and shares</p>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Input Section */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Magic Caption Generator</h2>
+          <p className="text-[#A1A1AA] text-sm">Create engaging captions that drive engagement</p>
+        </div>
+
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-2">Platform</label>
+            <select
+              value={platform}
+              onChange={(e) => setPlatform(e.target.value)}
+              data-testid="caption-platform-select"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-[#CCFF00] focus:ring-1 focus:ring-[#CCFF00] outline-none transition-all"
+            >
+              {PLATFORMS.map((p) => (
+                <option key={p.value} value={p.value}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Tone</label>
+            <select
+              value={tone}
+              onChange={(e) => setTone(e.target.value)}
+              data-testid="caption-tone-select"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-[#CCFF00] focus:ring-1 focus:ring-[#CCFF00] outline-none transition-all"
+            >
+              {TONES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2">Describe Your Content</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              data-testid="caption-description-input"
+              placeholder="E.g., Morning coffee at a cozy cafe, showing latte art"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-[#CCFF00] focus:ring-1 focus:ring-[#CCFF00] outline-none transition-all h-32 resize-none"
+            />
+          </div>
+
+          <button
+            onClick={handleGenerate}
+            disabled={loading}
+            data-testid="caption-generate-button"
+            className="w-full px-8 py-4 bg-[#CCFF00] text-black font-bold rounded-xl hover:bg-[#B3E600] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              'Generate Caption'
+            )}
+          </button>
+        </div>
       </div>
 
-      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 mb-6">
-        <div className="mb-4">
-          <label className="text-white mb-2 block">Content Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Describe your post content..."
-            className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl resize-none"
-            rows={4}
-          />
+      {/* Result Section */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Your Caption</h2>
+          <p className="text-[#A1A1AA] text-sm">Ready to post</p>
         </div>
 
-        <div className="mb-4">
-          <label className="text-white mb-2 block">Platform</label>
-          <select
-            value={platform}
-            onChange={(e) => setPlatform(e.target.value)}
-            className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl"
-          >
-            {PLATFORMS.map((p) => (
-              <option key={p.value} value={p.value}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="mb-6">
-          <label className="text-white mb-2 block">Tone</label>
-          <select
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl"
-          >
-            {TONES.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          onClick={handleGenerate}
-          disabled={loading}
-          className="w-full bg-[#CCFF00] text-black font-bold py-4 rounded-xl hover:bg-[#B3E600] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          {loading ? (
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
+          {result.result ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Generating...</span>
+              <div className="bg-black/50 rounded-xl p-6 mb-4 min-h-[300px]">
+                <p className="text-white leading-relaxed whitespace-pre-wrap">
+                  {result.result}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between mb-4 text-sm">
+                <span className="text-[#A1A1AA]">
+                  {result.character_count} characters
+                </span>
+                <span className={result.character_count > result.platform_limit ? 'text-red-400' : 'text-[#CCFF00]'}>
+                  {result.character_count} / {result.platform_limit}
+                </span>
+              </div>
+
+              {result.character_count > result.platform_limit && (
+                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                  Caption exceeds platform limit. Consider shortening it.
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleCopy(result.result)}
+                  data-testid="caption-copy-button"
+                  className="flex-1 px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  Copy
+                </button>
+                <button
+                  onClick={() => handleSave(result.result)}
+                  data-testid="caption-save-button"
+                  className="flex-1 px-6 py-3 bg-[#CCFF00]/10 border border-[#CCFF00]/30 text-[#CCFF00] rounded-xl hover:bg-[#CCFF00]/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <Bookmark className="w-4 h-4" />
+                  Save
+                </button>
+              </div>
             </>
           ) : (
-            <>
-              <Sparkles className="w-5 h-5" />
-              <span>Generate Caption</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {result && (
-        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
-          <h3 className="text-white text-lg mb-4">Generated Caption</h3>
-          <div className="bg-black/30 rounded-lg p-4 mb-4">
-            <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.result}</p>
-          </div>
-          {result.character_count && (
-            <div className="mb-4 text-sm text-[#A1A1AA]">
-              {result.character_count} characters
-              {result.platform_limit && ` / ${result.platform_limit} limit`}
+            <div className="text-center py-20">
+              <div className="inline-flex p-6 bg-white/5 rounded-full mb-4">
+                <svg className="w-12 h-12 text-[#A1A1AA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <p className="text-[#A1A1AA]">Fill in the details to generate a caption</p>
             </div>
           )}
-          <div className="flex gap-4">
-            <button
-              onClick={() => handleCopy(result.result)}
-              className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-            >
-              <Copy className="w-4 h-4" />
-              <span>Copy</span>
-            </button>
-            <button
-              onClick={() => handleSave(result.result)}
-              className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
-            >
-              <Bookmark className="w-4 h-4" />
-              <span>Save</span>
-            </button>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

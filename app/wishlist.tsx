@@ -1,9 +1,23 @@
+
+/**
+ * Copyright (c) 2026 Winplaybox
+ * All rights reserved.
+ *
+ * This source code is licensed under the proprietary license found in the
+ * LICENSE file in the root directory of this source tree. 
+ * Unauthorized copying of this file, via any medium, is strictly prohibited.
+ *
+ * Proprietary and confidential.
+ */
+
+import AppHeader from '@/app/components/common/AppHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Copy, Trash2 } from 'lucide-react';
+import { Copy, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 
 interface WishlistItem {
@@ -14,8 +28,8 @@ interface WishlistItem {
   characterCount?: number;
   platformLimit?: number;
 }
-
 export default function Wishlist() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const router = useRouter();
 
@@ -30,7 +44,7 @@ export default function Wishlist() {
     }
   };
 
-  const handleDelete = async(id) => {
+  const handleDelete = async(id: number) => {
     const updated = items.filter(item => item.id !== id);
     setItems(updated);
     await AsyncStorage.setItem('hashtagHeroWishlist', JSON.stringify(updated));
@@ -50,36 +64,25 @@ export default function Wishlist() {
 
   return (
     <div className="min-h-screen bg-[#050505]">
-      {/* Navigation */}
-      <nav className="px-6 py-6 flex justify-between items-center border-b border-white/10">
-        <button 
-          onClick={() => router.push('/dashboard')}
-          data-testid="back-to-dashboard-button"
-          className="flex items-center gap-2 text-[#A1A1AA] hover:text-white transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Dashboard
-        </button>
-        <div className="text-2xl font-bold">
-          <span className="text-[#CCFF00]">Hashtag</span>
-          <span className="text-white">Hero</span>
-        </div>
-        {items.length > 0 && (
-          <button
-            onClick={clearAll}
-            data-testid="clear-all-button"
-            className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full hover:bg-red-500/20 transition-all text-sm"
-          >
-            Clear All
-          </button>
-        )}
-      </nav>
-
+      <AppHeader
+        showBack
+        extraButton={
+          items.length > 0 && (
+            <button
+              onClick={clearAll}
+              data-testid="clear-all-button"
+              className="px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full hover:bg-red-500/20 transition-all text-sm"
+            >
+              {t('app.clearAll')}
+            </button>
+          )
+        }
+      />
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Your Wishlist</h1>
-          <p className="text-[#A1A1AA]">Saved hashtags, captions, and more</p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-2">{t('app.yourWishlist')}</h1>
+          <p className="text-[#A1A1AA]">{t('app.savedItemsDesc')}</p>
         </div>
 
         {items.length === 0 ? (
@@ -93,14 +96,14 @@ export default function Wishlist() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold mb-2">No saved items yet</h2>
-            <p className="text-[#A1A1AA] mb-6">Start generating content and save your favorites here</p>
+            <h2 className="text-2xl font-bold mb-2">{t('app.noSavedItems')}</h2>
+            <p className="text-[#A1A1AA] mb-6">{t('app.startGenerating')}</p>
             <button
               onClick={() => router.push('/dashboard')}
               data-testid="go-to-dashboard-button"
               className="px-8 py-4 bg-[#CCFF00] text-black font-bold rounded-full hover:bg-[#B3E600] transition-all"
             >
-              Go to Dashboard
+              {t('app.goToDashboard')}
             </button>
           </motion.div>
         ) : (

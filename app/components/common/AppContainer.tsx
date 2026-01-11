@@ -9,12 +9,17 @@
  *
  * Proprietary and confidential.
  */
-/**
- * Centralized Constants Export
- * Import all constants from here for easier management
- */
+import React from 'react';
 
-export * from './platforms';
-export * from './theme';
-export * from './tones';
+interface AppContainerProps {
+  children: React.ReactNode;
+  className?: string;
+}
 
+export default function AppContainer({ children, className = '' }: AppContainerProps) {
+  return (
+    <div className={`min-h-screen bg-[#050505] ${className}`}>
+      {children}
+    </div>
+  );
+}

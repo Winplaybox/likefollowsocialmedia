@@ -1,0 +1,125 @@
+{
+  "features": {
+    "vision": {
+      "title": "Vision",
+      "subtitle": "Image en hashtags",
+      "description": "Téléchargez une photo et obtenez instantanément 30 hashtags viraux et optimisés SEO."
+    },
+    "content": {
+      "title": "Contenu",
+      "subtitle": "Générateur de légendes magiques",
+      "description": "Générez des légendes engageantes qui stimulent les likes, commentaires et partages."
+    },
+    "bio": {
+      "title": "Bio",
+      "subtitle": "Optimiseur de profil",
+      "description": "Créez la bio parfaite qui convertit les visiteurs en abonnés."
+    },
+    "engagement": {
+      "title": "Engagement",
+      "subtitle": "Assistant commentaire IA",
+      "description": "Obtenez des suggestions de réponses intelligentes pour booster l'engagement et la communauté."
+    },
+    "remix": {
+      "title": "Remix",
+      "subtitle": "Un post, partout",
+      "description": "Adaptez votre contenu pour Instagram, TikTok et YouTube en un clic."
+    },
+    "roast": {
+      "title": "Roast",
+      "subtitle": "Audit de profil",
+      "description": "Recevez des retours honnêtes pour améliorer votre présence sur les réseaux sociaux."
+    }
+  },
+  "home": {
+    "trusted": "Approuvé par plus de 10 000 créateurs • 100% gratuit • Sans carte de crédit",
+    "tryAllTools": "Essayez tous les outils",
+    "footer": "© {{year}} HashtagHero. Propulsé par l'IA. Conçu pour les créateurs."
+  },
+  "app": {
+    "dashboard": "Tableau de bord",
+    "dashboardDesc": "Générez des bios, des légendes, des commentaires et plus encore pour vos plateformes sociales préférées.",
+    "viewWishlist": "Voir la liste de souhaits",
+    "settings": "Paramètres",
+    "history": "Historique",
+    "clearAll": "Tout effacer",
+    "yourWishlist": "Votre liste de souhaits",
+    "savedItemsDesc": "Hashtags, légendes et plus enregistrés",
+    "noSavedItems": "Aucun élément enregistré pour le moment",
+    "startGenerating": "Commencez à générer du contenu et enregistrez vos favoris ici",
+    "goToDashboard": "Aller au tableau de bord",
+    "homeTitle": "LikeFollow : Outils IA pour les réseaux sociaux",
+    "homeDesc": "Générez des bios, des légendes, des commentaires et plus encore pour vos plateformes sociales préférées.",
+    "getStarted": "Commencer",
+    "homeHeroTitle": "Devenez viral avec",
+    "homeHeroSubtitle": "Propulsé par l'IA",
+    "homeHeroContent": "Contenu",
+    "homeDescription": "Générez des hashtags tendance, des légendes virales et des bios optimisés pour Instagram, TikTok et YouTube. 100% gratuit, propulsé par l'IA.",
+    "startCreating": "Commencer à créer gratuitement",
+    "copy": "Copier",
+    "save": "Enregistrer",
+    "clear": "Effacer"
+  },
+  "bioTool": {
+    "title": "Optimiseur de bio de profil",
+    "description": "Créez une bio qui convertit les visiteurs en abonnés",
+    "optimizedBio": "Votre bio optimisée",
+    "readyToUpdate": "Prêt à mettre à jour votre profil",
+    "generateButton": "Générer une bio"
+  },
+  "captionTool": {
+    "title": "Générateur de légendes magiques",
+    "description": "Créez des légendes engageantes qui stimulent l'engagement",
+    "platform": "Plateforme",
+    "tone": "Ton",
+    "describeLabel": "Décrivez votre contenu",
+    "describePlaceholder": "Par exemple, café du matin dans un café confortable, montrant de l'art latte",
+    "generateButton": "Générer une légende",
+    "generatedCaption": "Votre légende",
+    "readyToPost": "Prêt à publier",
+    "saveType": "Légende",
+    "resultPlaceholder": "Fournissez des détails pour générer votre légende"
+  },
+  "commentTool": {
+    "title": "Générateur de commentaires",
+    "description": "Obtenez des suggestions de commentaires IA pour n'importe quel post",
+    "contextLabel": "Contexte du post",
+    "contextPlaceholder": "Par exemple, un ami vient de publier une photo de son nouveau chiot",
+    "generateButton": "Générer des commentaires",
+    "suggestedComments": "Commentaires suggérés",
+    "copyOrSave": "Copiez ou enregistrez votre préféré",
+    "saveType": "Commentaire",
+    "resultPlaceholder": "Décrivez un post pour obtenir des suggestions de commentaires"
+  },
+  "remixTool": {
+    "title": "Remixer le contenu",
+    "description": "Adaptez le contenu pour {{platforms}}.",
+    "contentLabel": "Contenu du post",
+    "contentPlaceholder": "Collez le contenu de votre post ici...",
+    "generateButton": "Remixer pour toutes les plateformes",
+    "saveType": "Remix - {{platform}}",
+    "resultPlaceholder": "Entrez votre post pour le remixer pour toutes les plateformes"
+  },
+  "roastTool": {
+    "title": "Roast de profil",
+    "description": "Obtenez des retours honnêtes pour améliorer votre jeu",
+    "detailsLabel": "Détails du profil",
+    "detailsPlaceholder": "Partagez des détails sur votre profil : bio, type de contenu, fréquence de publication, engagement, nombre d'abonnés, etc. Plus il y a de détails, mieux c'est !",
+    "generateButton": "Générer un roast",
+    "resultTitle": "Résultat du roast",
+    "copyOrSave": "Copiez ou enregistrez votre roast préféré",
+    "saveType": "Roast de profil",
+    "resultPlaceholder": "Partagez les détails de votre profil pour obtenir un roast"
+  },
+  "visionTool": {
+    "title": "Générateur de légendes visuelles",
+    "description": "Décrivez votre image et obtenez une légende créative",
+    "descriptionLabel": "Description de l'image",
+    "descriptionPlaceholder": "Par exemple, un coucher de soleil sur les montagnes avec un chien au premier plan",
+    "generateButton": "Générer une légende",
+    "resultTitle": "Légende générée",
+    "copyOrSave": "Copiez ou enregistrez votre préféré",
+    "saveType": "Légende visuelle",
+    "resultPlaceholder": "Téléchargez une image pour générer des hashtags"
+  }
+}

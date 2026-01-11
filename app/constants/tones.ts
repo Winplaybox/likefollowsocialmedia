@@ -1,6 +1,9 @@
 /**
  * Tone Configuration
  * Centralized management of content tones/styles
+ * 
+ * Tones are loaded from environment variables (EXPO_PUBLIC_TONES) with fallback to defaults
+ * To update tones, modify the .env file or set EXPO_PUBLIC_TONES environment variable
  */
 
 export interface Tone {
@@ -9,7 +12,8 @@ export interface Tone {
   description?: string;
 }
 
-export const TONES: Tone[] = [
+// Default tones (fallback if env var is not set)
+const DEFAULT_TONES: Tone[] = [
   {
     value: 'engaging',
     label: 'Engaging',
@@ -53,6 +57,26 @@ export const TONES: Tone[] = [
 ];
 
 /**
+ * Load tones from environment variable or use defaults
+ */
+const loadTones = (): Tone[] => {
+  try {
+    const envTones = process.env.EXPO_PUBLIC_TONES;
+    if (envTones) {
+      const parsed = JSON.parse(envTones);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed as Tone[];
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to parse EXPO_PUBLIC_TONES, using defaults:', error);
+  }
+  return DEFAULT_TONES;
+};
+
+export const TONES: Tone[] = loadTones();
+
+/**
  * Get tone by value
  */
 export const getTone = (value: string): Tone | undefined => {
@@ -67,6 +91,6 @@ export const getToneLabel = (toneValue: string): string => {
 };
 
 /**
- * Default tone
+ * Default tone (from env or fallback)
  */
-export const DEFAULT_TONE = 'engaging';
+export const DEFAULT_TONE = process.env.EXPO_PUBLIC_DEFAULT_TONE || 'engaging';

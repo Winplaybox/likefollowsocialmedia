@@ -14,58 +14,55 @@ export interface Platform {
 }
 
 // Default platforms (fallback if env var is not set)
-const DEFAULT_PLATFORMS: Platform[] = [
-  {
-    value: 'instagram',
-    label: 'Instagram',
-    characterLimit: 2200,
-  },
-  {
-    value: 'tiktok',
-    label: 'TikTok',
-    characterLimit: 2200,
-  },
-  {
-    value: 'youtube',
-    label: 'YouTube',
-    characterLimit: 5000,
-  },
-  {
-    value: 'twitter',
-    label: 'Twitter',
-    characterLimit: 280,
-  },
-  {
-    value: 'facebook',
-    label: 'Facebook',
-    characterLimit: 63206,
-  },
-  {
-    value: 'linkedin',
-    label: 'LinkedIn',
-    characterLimit: 3000,
-  },
-];
+// const DEFAULT_PLATFORMS: Platform[] = [
+//   {
+//     value: 'instagram',
+//     label: 'Instagram',
+//     characterLimit: 2200,
+//   },
+//   {
+//     value: 'tiktok',
+//     label: 'TikTok',
+//     characterLimit: 2200,
+//   },
+//   {
+//     value: 'youtube',
+//     label: 'YouTube',
+//     characterLimit: 5000,
+//   },
+//   {
+//     value: 'twitter',
+//     label: 'Twitter',
+//     characterLimit: 280,
+//   },
+//   {
+//     value: 'facebook',
+//     label: 'Facebook',
+//     characterLimit: 63206,
+//   },
+//   {
+//     value: 'linkedin',
+//     label: 'LinkedIn',
+//     characterLimit: 3000,
+//   },
+// ];
 
-/**
- * Load platforms from environment variable or use defaults
- */
-const loadPlatforms = (): Platform[] => {
-  try {
-    const envPlatforms = process.env.EXPO_PUBLIC_PLATFORMS;
-    if (envPlatforms) {
-      const parsed = JSON.parse(envPlatforms);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed as Platform[];
-      }
-    }
-  } catch (error) {
-    console.warn('Failed to parse EXPO_PUBLIC_PLATFORMS, using defaults:', error);
-  }
-  return DEFAULT_PLATFORMS;
-};
+// /**
+//  * Load platforms from environment variable or use defaults
+//  */
+// const loadPlatforms = (): Platform[] => {
+// let platforms: Platform[] = [];
+//     const envPlatforms = process.env.EXPO_PUBLIC_PLATFORMS;
+//     if (envPlatforms) {
+//       const parsed = JSON.parse(envPlatforms);
+//       if (Array.isArray(parsed) && parsed.length > 0) {
+//         platforms = parsed as Platform[];
+//       }
+//     }
+//     return platforms;
+// };
 
-export const PLATFORMS: Platform[] = loadPlatforms();
+export const PLATFORMS: Platform[] = JSON.parse(process.env.EXPO_PUBLIC_PLATFORMS?.trim() || '[]');
 
 /**
  * Get platform by value

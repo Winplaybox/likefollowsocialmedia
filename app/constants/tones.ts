@@ -12,69 +12,66 @@ export interface Tone {
   description?: string;
 }
 
-// Default tones (fallback if env var is not set)
-const DEFAULT_TONES: Tone[] = [
-  {
-    value: 'engaging',
-    label: 'Engaging',
-    description: 'Captivating and interactive content',
-  },
-  {
-    value: 'professional',
-    label: 'Professional',
-    description: 'Formal and business-appropriate',
-  },
-  {
-    value: 'fun',
-    label: 'Fun',
-    description: 'Light-hearted and entertaining',
-  },
-  {
-    value: 'inspirational',
-    label: 'Inspirational',
-    description: 'Motivational and uplifting',
-  },
-  {
-    value: 'casual',
-    label: 'Casual',
-    description: 'Relaxed and conversational',
-  },
-  {
-    value: 'humorous',
-    label: 'Humorous',
-    description: 'Funny and witty',
-  },
-  {
-    value: 'educational',
-    label: 'Educational',
-    description: 'Informative and instructional',
-  },
-  {
-    value: 'persuasive',
-    label: 'Persuasive',
-    description: 'Convincing and compelling',
-  },
-];
+// // Default tones (fallback if env var is not set)
+// const DEFAULT_TONES: Tone[] = [
+//   {
+//     value: 'engaging',
+//     label: 'Engaging',
+//     description: 'Captivating and interactive content',
+//   },
+//   {
+//     value: 'professional',
+//     label: 'Professional',
+//     description: 'Formal and business-appropriate',
+//   },
+//   {
+//     value: 'fun',
+//     label: 'Fun',
+//     description: 'Light-hearted and entertaining',
+//   },
+//   {
+//     value: 'inspirational',
+//     label: 'Inspirational',
+//     description: 'Motivational and uplifting',
+//   },
+//   {
+//     value: 'casual',
+//     label: 'Casual',
+//     description: 'Relaxed and conversational',
+//   },
+//   {
+//     value: 'humorous',
+//     label: 'Humorous',
+//     description: 'Funny and witty',
+//   },
+//   {
+//     value: 'educational',
+//     label: 'Educational',
+//     description: 'Informative and instructional',
+//   },
+//   {
+//     value: 'persuasive',
+//     label: 'Persuasive',
+//     description: 'Convincing and compelling',
+//   },
+// ];
 
-/**
- * Load tones from environment variable or use defaults
- */
-const loadTones = (): Tone[] => {
-  try {
-    const envTones = process.env.EXPO_PUBLIC_TONES;
-    if (envTones) {
-      const parsed = JSON.parse(envTones);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed as Tone[];
-      }
-    }
-  } catch (error) {
-    console.warn('Failed to parse EXPO_PUBLIC_TONES, using defaults:', error);
-  }
-  return DEFAULT_TONES;
-};
+// /**
+//  * Load tones from environment variable or use defaults
+//  */
+// const loadTones = (): Tone[] => {
+//   let tones:Tone[] = [];
+//   const envTones = process.env.EXPO_PUBLIC_TONES;
+//     if (envTones) {
+//       const parsed = JSON.parse(envTones);
+//       if (Array.isArray(parsed) && parsed.length > 0) {
+//         tones = parsed as Tone[];
+//       }
+//     }
+//     return tones;
+// };
 
-export const TONES: Tone[] = loadTones();
+export const TONES: Tone[] = JSON.parse(process.env.EXPO_PUBLIC_TONES?.trim() || '[]');
 
 /**
  * Get tone by value

@@ -1,3 +1,4 @@
+import { DEFAULT_PLATFORM, PLATFORMS } from '@/app/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
@@ -13,7 +14,7 @@ interface GeneratedResponse {
 
 export default function BioTool() {
   const [details, setDetails] = useState('');
-  const [platform, setPlatform] = useState('instagram');
+  const [platform, setPlatform] = useState(DEFAULT_PLATFORM);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GeneratedResponse | null>(null);
 
@@ -83,9 +84,11 @@ export default function BioTool() {
             onChange={(e) => setPlatform(e.target.value)}
             className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl"
           >
-            <option value="instagram">Instagram</option>
-            <option value="tiktok">TikTok</option>
-            <option value="youtube">YouTube</option>
+            {PLATFORMS.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
+            ))}
           </select>
         </div>
 

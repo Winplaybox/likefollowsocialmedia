@@ -1,3 +1,4 @@
+import { getPlatformLabel } from '@/app/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
@@ -96,7 +97,7 @@ export default function RemixTool() {
       {result && (
         <div className="space-y-6">
           <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
-            <h3 className="text-white text-lg mb-4">Instagram Version</h3>
+            <h3 className="text-white text-lg mb-4">{getPlatformLabel('instagram')} Version</h3>
             <div className="bg-black/30 rounded-lg p-4 mb-4">
               <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.instagram}</p>
             </div>
@@ -109,7 +110,7 @@ export default function RemixTool() {
                 <span>Copy</span>
               </button>
               <button
-                onClick={() => handleSave(result.instagram, 'Instagram')}
+                onClick={() => handleSave(result.instagram, getPlatformLabel('instagram'))}
                 className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
               >
                 <Bookmark className="w-4 h-4" />
@@ -119,7 +120,7 @@ export default function RemixTool() {
           </div>
 
           <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
-            <h3 className="text-white text-lg mb-4">TikTok Version</h3>
+            <h3 className="text-white text-lg mb-4">{getPlatformLabel('tiktok')} Version</h3>
             <div className="bg-black/30 rounded-lg p-4 mb-4">
               <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.tiktok}</p>
             </div>
@@ -132,7 +133,7 @@ export default function RemixTool() {
                 <span>Copy</span>
               </button>
               <button
-                onClick={() => handleSave(result.tiktok, 'TikTok')}
+                onClick={() => handleSave(result.tiktok, getPlatformLabel('tiktok'))}
                 className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
               >
                 <Bookmark className="w-4 h-4" />
@@ -142,7 +143,7 @@ export default function RemixTool() {
           </div>
 
           <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
-            <h3 className="text-white text-lg mb-4">YouTube Version</h3>
+            <h3 className="text-white text-lg mb-4">{getPlatformLabel('youtube')} Version</h3>
             <div className="bg-black/30 rounded-lg p-4 mb-4">
               <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.youtube}</p>
             </div>
@@ -155,7 +156,7 @@ export default function RemixTool() {
                 <span>Copy</span>
               </button>
               <button
-                onClick={() => handleSave(result.youtube, 'YouTube')}
+                onClick={() => handleSave(result.youtube, getPlatformLabel('youtube'))}
                 className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
               >
                 <Bookmark className="w-4 h-4" />

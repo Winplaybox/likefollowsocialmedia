@@ -1,3 +1,4 @@
+import { DEFAULT_PLATFORM, DEFAULT_TONE, PLATFORMS, TONES } from '@/app/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
@@ -16,8 +17,8 @@ const API = `${BACKEND_URL}/api`;
 
 export default function CaptionTool() {
   const [description, setDescription] = useState('');
-  const [platform, setPlatform] = useState('instagram');
-  const [tone, setTone] = useState('engaging');
+  const [platform, setPlatform] = useState(DEFAULT_PLATFORM);
+  const [tone, setTone] = useState(DEFAULT_TONE);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GeneratedResponse | null>(null);
 
@@ -88,9 +89,11 @@ export default function CaptionTool() {
             onChange={(e) => setPlatform(e.target.value)}
             className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl"
           >
-            <option value="instagram">Instagram</option>
-            <option value="tiktok">TikTok</option>
-            <option value="youtube">YouTube</option>
+            {PLATFORMS.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -101,10 +104,11 @@ export default function CaptionTool() {
             onChange={(e) => setTone(e.target.value)}
             className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl"
           >
-            <option value="engaging">Engaging</option>
-            <option value="professional">Professional</option>
-            <option value="fun">Fun</option>
-            <option value="inspirational">Inspirational</option>
+            {TONES.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
+            ))}
           </select>
         </div>
 

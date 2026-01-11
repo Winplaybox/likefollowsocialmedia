@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
-import { Bookmark, Copy, Loader2, Target } from 'lucide-react';
+import { Bookmark, Copy, Flame, Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { BACKEND_URL_API } from '../lib/utils';
 
 interface GeneratedResponse {
   result: string;
@@ -12,7 +13,9 @@ interface GeneratedResponse {
 export default function RoastTool() {
   const [profileDetails, setProfileDetails] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<GeneratedResponse | null>(null);
+  const [result, setResult] = useState<GeneratedResponse>({
+    result: '',
+  });
 
   const handleGenerate = async () => {
     if (!profileDetails.trim()) {
@@ -22,8 +25,8 @@ export default function RoastTool() {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/roast-profile`, {
-        profile_details: profileDetails,
+      const response = await axios.post(`${BACKEND_URL_API}/roast-profile`, {
+        profile_details: profileDetails
       });
 
       setResult(response.data);
@@ -54,71 +57,101 @@ export default function RoastTool() {
   };
 
   return (
-    <div className="w-full">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">Profile Roast</h2>
-        <p className="text-[#A1A1AA] text-sm">Get brutally honest feedback to level up your social media game</p>
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Input Section */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
+            Profile Roast <Flame className="w-6 h-6 text-orange-500" />
+          </h2>
+          <p className="text-[#A1A1AA] text-sm">Get brutally honest feedback to level up your game</p>
+        </div>
+
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8 space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-2">Your Profile Details</label>
+            <textarea
+              value={profileDetails}
+              onChange={(e) => setProfileDetails(e.target.value)}
+              data-testid="roast-profile-input"
+              placeholder="Share details about your profile: bio, content type, posting frequency, engagement, follower count, etc. The more details, the better the roast!"
+              className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-[#CCFF00] focus:ring-1 focus:ring-[#CCFF00] outline-none transition-all h-64 resize-none"
+            />
+          </div>
+
+          <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+            <p className="text-orange-400 text-sm flex items-start gap-2">
+              <Flame className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span>Warning: This tool provides honest, constructive criticism. Expect direct feedback!</span>
+            </p>
+          </div>
+
+          <button
+            onClick={handleGenerate}
+            disabled={loading}
+            data-testid="roast-generate-button"
+            className="w-full px-8 py-4 bg-[#CCFF00] text-black font-bold rounded-xl hover:bg-[#B3E600] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Roasting...
+              </>
+            ) : (
+              <>
+                <Flame className="w-5 h-5" />
+                Roast My Profile
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
-      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 mb-6">
-        <div className="mb-4">
-          <label className="text-white mb-2 block">Your Profile Details</label>
-          <textarea
-            value={profileDetails}
-            onChange={(e) => setProfileDetails(e.target.value)}
-            placeholder="Share details about your profile: bio, content type, posting frequency, engagement, follower count, etc."
-            className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl resize-none"
-            rows={6}
-          />
+      {/* Result Section */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">The Verdict</h2>
+          <p className="text-[#A1A1AA] text-sm">Honest feedback & actionable advice</p>
         </div>
 
-        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
-          <p className="text-orange-400 text-sm">Warning: This tool provides honest, constructive criticism. Expect direct feedback!</p>
-        </div>
-
-        <button
-          onClick={handleGenerate}
-          disabled={loading}
-          className="w-full bg-[#CCFF00] text-black font-bold py-4 rounded-xl hover:bg-[#B3E600] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-        >
-          {loading ? (
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-8">
+          {result.result ? (
             <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span>Roasting...</span>
+              <div className="bg-black/50 rounded-xl p-6 mb-4 min-h-[400px]">
+                <p className="text-white leading-relaxed whitespace-pre-wrap">
+                  {result.result}
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => handleCopy(result.result)}
+                  data-testid="roast-copy-button"
+                  className="flex-1 px-6 py-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  Copy
+                </button>
+                <button
+                  onClick={() => handleSave(result.result)}
+                  data-testid="roast-save-button"
+                  className="flex-1 px-6 py-3 bg-[#CCFF00]/10 border border-[#CCFF00]/30 text-[#CCFF00] rounded-xl hover:bg-[#CCFF00]/20 transition-all flex items-center justify-center gap-2"
+                >
+                  <Bookmark className="w-4 h-4" />
+                  Save
+                </button>
+              </div>
             </>
           ) : (
-            <>
-              <Target className="w-5 h-5" />
-              <span>Roast My Profile</span>
-            </>
+            <div className="text-center py-20">
+              <div className="inline-flex p-6 bg-white/5 rounded-full mb-4">
+                <Flame className="w-12 h-12 text-[#A1A1AA]" />
+              </div>
+              <p className="text-[#A1A1AA]">Share your profile details to get roasted</p>
+            </div>
           )}
-        </button>
-      </div>
-
-      {result && (
-        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
-          <h3 className="text-white text-lg mb-4">Profile Roast</h3>
-          <div className="bg-black/30 rounded-lg p-4 mb-4">
-            <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.result}</p>
-          </div>
-          <div className="flex gap-4">
-            <button
-              onClick={() => handleCopy(result.result)}
-              className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-            >
-              <Copy className="w-4 h-4" />
-              <span>Copy</span>
-            </button>
-            <button
-              onClick={() => handleSave(result.result)}
-              className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
-            >
-              <Bookmark className="w-4 h-4" />
-              <span>Save</span>
-            </button>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

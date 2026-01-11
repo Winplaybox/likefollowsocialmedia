@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
-import * as ImagePicker from 'expo-image-picker';
-import React, { useState } from 'react';
-import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { Bookmark, Copy, Image as ImageIcon, Loader2, Sparkles } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { toast } from 'sonner';
 
 interface GeneratedResponse {
   result: string;
@@ -12,50 +11,33 @@ interface GeneratedResponse {
 
 export default function VisionTool() {
   const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<GeneratedResponse | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      Toast.show({
-        type: 'error',
-        text1: 'Permission denied',
-        text2: 'We need access to your photos',
-      });
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleGenerate = async () => {
-    if (!image) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please select an image first',
-      });
+    if (!imageFile) {
+      toast.error('Please select an image first');
       return;
     }
 
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('image', {
-        uri: image,
-        type: 'image/jpeg',
-        name: 'image.jpg',
-      } as any);
+      formData.append('image', imageFile);
 
       const response = await axios.post(`${process.env.EXPO_PUBLIC_BACKEND_URL}/api/generate-hashtags-from-image`, formData, {
         headers: {
@@ -64,18 +46,10 @@ export default function VisionTool() {
       });
 
       setResult(response.data);
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Hashtags generated!',
-      });
+      toast.success('Hashtags generated!');
     } catch (error) {
       console.error('Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Failed to generate hashtags. Please try again.',
-      });
+      toast.error('Failed to generate hashtags. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -83,10 +57,7 @@ export default function VisionTool() {
 
   const handleCopy = async (text: string) => {
     await Clipboard.setStringAsync(text);
-    Toast.show({
-      type: 'success',
-      text1: 'Copied to clipboard!',
-    });
+    toast.success('Copied to clipboard!');
   };
 
   const handleSave = async (hashtags: string) => {
@@ -98,55 +69,81 @@ export default function VisionTool() {
       timestamp: new Date().toISOString(),
     });
     await AsyncStorage.setItem('hashtagHeroWishlist', JSON.stringify(saved));
-    Toast.show({
-      type: 'success',
-      text1: 'Saved to wishlist!',
-    });
+    toast.success('Saved to wishlist!');
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-900 p-6">
-      <View className="mb-6">
-        <Text className="text-2xl font-bold text-white mb-2">AI Vision Hashtags</Text>
-        <Text className="text-gray-400 text-sm">Upload any photo and get 30 viral, SEO-optimized hashtags instantly</Text>
-      </View>
+    <div className="w-full">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-white mb-2">AI Vision Hashtags</h2>
+        <p className="text-[#A1A1AA] text-sm">Upload any photo and get 30 viral, SEO-optimized hashtags instantly</p>
+      </div>
 
-      <View className="bg-gray-800 rounded-2xl p-6 mb-6">
-        <TouchableOpacity onPress={pickImage} className="bg-gray-700 rounded-xl p-6 mb-4 items-center">
+      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 mb-6">
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          accept="image/*"
+          className="hidden"
+        />
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="w-full bg-white/5 border border-white/10 rounded-xl p-6 mb-4 flex flex-col items-center justify-center hover:bg-white/10 transition-all"
+        >
           {image ? (
-            <Image source={{ uri: image }} style={{ width: 200, height: 150, borderRadius: 10 }} />
+            <img src={image} alt="Selected" className="max-w-full max-h-64 rounded-lg mb-2" />
           ) : (
-            <Text className="text-gray-400">Tap to select image</Text>
+            <>
+              <ImageIcon className="w-12 h-12 text-[#A1A1AA] mb-2" />
+              <p className="text-[#A1A1AA]">Click to select image</p>
+            </>
           )}
-        </TouchableOpacity>
+        </button>
 
-        <TouchableOpacity
-          onPress={handleGenerate}
+        <button
+          onClick={handleGenerate}
           disabled={loading || !image}
-          className="bg-green-500 p-4 rounded-xl flex-row justify-center items-center"
+          className="w-full bg-[#CCFF00] text-black font-bold py-4 rounded-xl hover:bg-[#B3E600] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading ? (
-            <ActivityIndicator color="white" />
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Generating...</span>
+            </>
           ) : (
-            <Text className="text-black font-bold text-lg">Generate Hashtags</Text>
+            <>
+              <Sparkles className="w-5 h-5" />
+              <span>Generate Hashtags</span>
+            </>
           )}
-        </TouchableOpacity>
-      </View>
+        </button>
+      </div>
 
       {result && (
-        <View className="bg-gray-800 rounded-2xl p-6">
-          <Text className="text-white text-lg mb-4">Generated Hashtags</Text>
-          <Text className="text-white bg-gray-700 p-4 rounded-xl mb-4">{result.result}</Text>
-          <View className="flex-row justify-between">
-            <TouchableOpacity onPress={() => handleCopy(result.result)} className="bg-gray-600 p-3 rounded-xl">
-              <Text className="text-white">Copy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSave(result.result)} className="bg-green-500 p-3 rounded-xl">
-              <Text className="text-black">Save</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-white text-lg mb-4">Generated Hashtags</h3>
+          <div className="bg-black/30 rounded-lg p-4 mb-4">
+            <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.result}</p>
+          </div>
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleCopy(result.result)}
+              className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+            >
+              <Copy className="w-4 h-4" />
+              <span>Copy</span>
+            </button>
+            <button
+              onClick={() => handleSave(result.result)}
+              className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
+            >
+              <Bookmark className="w-4 h-4" />
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
       )}
-    </ScrollView>
+    </div>
   );
 }

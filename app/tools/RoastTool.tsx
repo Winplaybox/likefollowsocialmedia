@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
+import { Bookmark, Copy, Loader2, Target } from 'lucide-react';
 import React, { useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { toast } from 'sonner';
 
 interface GeneratedResponse {
   result: string;
@@ -16,11 +16,7 @@ export default function RoastTool() {
 
   const handleGenerate = async () => {
     if (!profileDetails.trim()) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please provide your profile details',
-      });
+      toast.error('Please provide your profile details');
       return;
     }
 
@@ -31,18 +27,10 @@ export default function RoastTool() {
       });
 
       setResult(response.data);
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Profile roasted successfully!',
-      });
+      toast.success('Profile roasted successfully!');
     } catch (error) {
       console.error('Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Failed to roast profile. Please try again.',
-      });
+      toast.error('Failed to roast profile. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -50,10 +38,7 @@ export default function RoastTool() {
 
   const handleCopy = async (text: string) => {
     await Clipboard.setStringAsync(text);
-    Toast.show({
-      type: 'success',
-      text1: 'Copied to clipboard!',
-    });
+    toast.success('Copied to clipboard!');
   };
 
   const handleSave = async (roast: string) => {
@@ -65,63 +50,75 @@ export default function RoastTool() {
       timestamp: new Date().toISOString(),
     });
     await AsyncStorage.setItem('hashtagHeroWishlist', JSON.stringify(saved));
-    Toast.show({
-      type: 'success',
-      text1: 'Saved to wishlist!',
-    });
+    toast.success('Saved to wishlist!');
   };
 
   return (
-    <ScrollView className="flex-1 bg-gray-900 p-6">
-      <View className="mb-6">
-        <Text className="text-2xl font-bold text-white mb-2">Profile Roast</Text>
-        <Text className="text-gray-400 text-sm">Get brutally honest feedback to level up your social media game</Text>
-      </View>
+    <div className="w-full">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-white mb-2">Profile Roast</h2>
+        <p className="text-[#A1A1AA] text-sm">Get brutally honest feedback to level up your social media game</p>
+      </div>
 
-      <View className="bg-gray-800 rounded-2xl p-6 mb-6">
-        <View className="mb-4">
-          <Text className="text-white mb-2">Your Profile Details</Text>
-          <TextInput
+      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 mb-6">
+        <div className="mb-4">
+          <label className="text-white mb-2 block">Your Profile Details</label>
+          <textarea
             value={profileDetails}
-            onChangeText={setProfileDetails}
+            onChange={(e) => setProfileDetails(e.target.value)}
             placeholder="Share details about your profile: bio, content type, posting frequency, engagement, follower count, etc."
-            className="bg-gray-700 text-white p-4 rounded-xl"
-            multiline
-            numberOfLines={6}
+            className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl resize-none"
+            rows={6}
           />
-        </View>
+        </div>
 
-        <View className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
-          <Text className="text-orange-400 text-sm">Warning: This tool provides honest, constructive criticism. Expect direct feedback!</Text>
-        </View>
+        <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 mb-6">
+          <p className="text-orange-400 text-sm">Warning: This tool provides honest, constructive criticism. Expect direct feedback!</p>
+        </div>
 
-        <TouchableOpacity
-          onPress={handleGenerate}
+        <button
+          onClick={handleGenerate}
           disabled={loading}
-          className="bg-green-500 p-4 rounded-xl flex-row justify-center items-center"
+          className="w-full bg-[#CCFF00] text-black font-bold py-4 rounded-xl hover:bg-[#B3E600] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading ? (
-            <ActivityIndicator color="white" />
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Roasting...</span>
+            </>
           ) : (
-            <Text className="text-black font-bold text-lg">Roast My Profile</Text>
+            <>
+              <Target className="w-5 h-5" />
+              <span>Roast My Profile</span>
+            </>
           )}
-        </TouchableOpacity>
-      </View>
+        </button>
+      </div>
 
       {result && (
-        <View className="bg-gray-800 rounded-2xl p-6">
-          <Text className="text-white text-lg mb-4">Profile Roast</Text>
-          <Text className="text-white bg-gray-700 p-4 rounded-xl mb-4">{result.result}</Text>
-          <View className="flex-row justify-between">
-            <TouchableOpacity onPress={() => handleCopy(result.result)} className="bg-gray-600 p-3 rounded-xl">
-              <Text className="text-white">Copy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleSave(result.result)} className="bg-green-500 p-3 rounded-xl">
-              <Text className="text-black">Save</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-white text-lg mb-4">Profile Roast</h3>
+          <div className="bg-black/30 rounded-lg p-4 mb-4">
+            <p className="text-white whitespace-pre-wrap font-mono text-sm leading-relaxed">{result.result}</p>
+          </div>
+          <div className="flex gap-4">
+            <button
+              onClick={() => handleCopy(result.result)}
+              className="flex-1 bg-white/5 border border-white/10 text-white py-3 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+            >
+              <Copy className="w-4 h-4" />
+              <span>Copy</span>
+            </button>
+            <button
+              onClick={() => handleSave(result.result)}
+              className="flex-1 bg-[#CCFF00] text-black font-bold py-3 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
+            >
+              <Bookmark className="w-4 h-4" />
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
       )}
-    </ScrollView>
+    </div>
   );
 }

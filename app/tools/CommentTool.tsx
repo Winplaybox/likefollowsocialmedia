@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Clipboard from 'expo-clipboard';
+import { Bookmark, Copy, Loader2, MessageSquare } from 'lucide-react';
 import React, { useState } from 'react';
-import { ActivityIndicator, FlatList, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { toast } from 'sonner';
 
 interface GeneratedResponse {
   result: string;
@@ -16,11 +16,7 @@ export default function CommentTool() {
 
   const handleGenerate = async () => {
     if (!context.trim()) {
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Please describe the post context',
-      });
+      toast.error('Please describe the post context');
       return;
     }
 
@@ -31,18 +27,10 @@ export default function CommentTool() {
       });
 
       setResult(response.data);
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'Comment suggestions generated!',
-      });
+      toast.success('Comment suggestions generated!');
     } catch (error) {
       console.error('Error:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2: 'Failed to generate comments. Please try again.',
-      });
+      toast.error('Failed to generate comments. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -50,10 +38,7 @@ export default function CommentTool() {
 
   const handleCopy = async (text: string) => {
     await Clipboard.setStringAsync(text);
-    Toast.show({
-      type: 'success',
-      text1: 'Copied to clipboard!',
-    });
+    toast.success('Copied to clipboard!');
   };
 
   const handleSave = async (comment: string) => {
@@ -65,74 +50,82 @@ export default function CommentTool() {
       timestamp: new Date().toISOString(),
     });
     await AsyncStorage.setItem('hashtagHeroWishlist', JSON.stringify(saved));
-    Toast.show({
-      type: 'success',
-      text1: 'Saved to wishlist!',
-    });
+    toast.success('Saved to wishlist!');
   };
 
   const comments = result ? result.result.split('---').map(c => c.trim()).filter(c => c) : [];
 
   return (
-    <ScrollView className="flex-1 bg-gray-900 p-6">
-      <View className="mb-6">
-        <Text className="text-2xl font-bold text-white mb-2">AI Comment Wingman</Text>
-        <Text className="text-gray-400 text-sm">Get smart replies to boost engagement</Text>
-      </View>
+    <div className="w-full">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-white mb-2">AI Comment Wingman</h2>
+        <p className="text-[#A1A1AA] text-sm">Get smart replies to boost engagement</p>
+      </div>
 
-      <View className="bg-gray-800 rounded-2xl p-6 mb-6">
-        <View className="mb-4">
-          <Text className="text-white mb-2">Post Context</Text>
-          <TextInput
+      <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 mb-6">
+        <div className="mb-4">
+          <label className="text-white mb-2 block">Post Context</label>
+          <textarea
             value={context}
-            onChangeText={setContext}
+            onChange={(e) => setContext(e.target.value)}
             placeholder="Describe the post you want to comment on..."
-            className="bg-gray-700 text-white p-4 rounded-xl"
-            multiline
-            numberOfLines={4}
+            className="w-full bg-black/30 border border-white/10 text-white p-4 rounded-xl resize-none"
+            rows={4}
           />
-        </View>
+        </div>
 
-        <TouchableOpacity
-          onPress={handleGenerate}
+        <button
+          onClick={handleGenerate}
           disabled={loading}
-          className="bg-green-500 p-4 rounded-xl flex-row justify-center items-center"
+          className="w-full bg-[#CCFF00] text-black font-bold py-4 rounded-xl hover:bg-[#B3E600] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {loading ? (
-            <ActivityIndicator color="white" />
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Generating...</span>
+            </>
           ) : (
-            <Text className="text-black font-bold text-lg">Generate Comments</Text>
+            <>
+              <MessageSquare className="w-5 h-5" />
+              <span>Generate Comments</span>
+            </>
           )}
-        </TouchableOpacity>
-      </View>
+        </button>
+      </div>
 
       {comments.length > 0 ? (
-        <View className="bg-gray-800 rounded-2xl p-6">
-          <Text className="text-white text-lg mb-4">Suggested Comments</Text>
-          <FlatList
-            data={comments}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View className="bg-gray-700 rounded-xl p-4 mb-4">
-                <Text className="text-white mb-4">{item}</Text>
-                <View className="flex-row justify-between">
-                  <TouchableOpacity onPress={() => handleCopy(item)} className="bg-gray-600 p-2 rounded-xl">
-                    <Text className="text-white">Copy</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => handleSave(item)} className="bg-green-500 p-2 rounded-xl">
-                    <Text className="text-black">Save</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
-          />
-        </View>
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6">
+          <h3 className="text-white text-lg mb-4">Suggested Comments</h3>
+          <div className="space-y-4">
+            {comments.map((comment, index) => (
+              <div key={index} className="bg-black/30 border border-white/10 rounded-xl p-4">
+                <p className="text-white mb-4 whitespace-pre-wrap">{comment}</p>
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => handleCopy(comment)}
+                    className="flex-1 bg-white/5 border border-white/10 text-white py-2 rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Copy className="w-4 h-4" />
+                    <span>Copy</span>
+                  </button>
+                  <button
+                    onClick={() => handleSave(comment)}
+                    className="flex-1 bg-[#CCFF00] text-black font-bold py-2 rounded-xl hover:bg-[#B3E600] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Bookmark className="w-4 h-4" />
+                    <span>Save</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       ) : result ? (
-        <View className="bg-gray-800 rounded-2xl p-6 text-center">
-          <Text className="text-6xl mb-4">💬</Text>
-          <Text className="text-gray-400">Describe a post to get comment suggestions</Text>
-        </View>
+        <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 text-center">
+          <div className="text-6xl mb-4">💬</div>
+          <p className="text-[#A1A1AA]">Describe a post to get comment suggestions</p>
+        </div>
       ) : null}
-    </ScrollView>
+    </div>
   );
 }

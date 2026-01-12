@@ -32,14 +32,22 @@
     }
   },
   "home": {
+    "welcome": "Devenez viral avec",
+    "subtitle": "Propulsé par l'IA",
+    "content": "Contenu",
+    "description": "Générez des hashtags tendance, des légendes virales et des bios optimisées pour Instagram, TikTok et YouTube. 100% gratuit, propulsé par l'IA.",
     "trusted": "Approuvé par plus de 10 000 créateurs • 100% gratuit • Sans carte de crédit",
     "tryAllTools": "Essayez tous les outils",
-    "footer": "© {{year}} HashtagHero. Propulsé par l'IA. Conçu pour les créateurs."
+    "footer": "© {{year}} HashtagHero. Propulsé par l'IA. Conçu pour les créateurs.",
+    "goToDashboard": "Commencer à créer gratuitement"
   },
   "app": {
+    "title": "Hashtag",
+    "titleHero": "Hero",
     "dashboard": "Tableau de bord",
+    "back": "Retour",
     "dashboardDesc": "Générez des bios, des légendes, des commentaires et plus encore pour vos plateformes sociales préférées.",
-    "viewWishlist": "Voir la liste de souhaits",
+    "viewWishlist": "Liste de souhaits",
     "settings": "Paramètres",
     "history": "Historique",
     "clearAll": "Tout effacer",
@@ -58,14 +66,27 @@
     "startCreating": "Commencer à créer gratuitement",
     "copy": "Copier",
     "save": "Enregistrer",
-    "clear": "Effacer"
+    "clear": "Effacer",
+    "modelSettings": "Paramètres du modèle",
+    "model": "Modèle IA",
+    "selectModel": "Sélectionner le modèle IA",
+    "apiKey": "Clé API",
+    "enterApiKey": "Entrez votre clé API",
+    "saveSettings": "Enregistrez vos paramètres pour utiliser votre modèle IA et votre clé API préférés.",
+    "copiedToClipboard": "Copié dans le presse-papiers !",
+    "savedToWishlist": "Enregistré dans la liste de souhaits !"
   },
   "bioTool": {
     "title": "Optimiseur de bio de profil",
     "description": "Créez une bio qui convertit les visiteurs en abonnés",
     "optimizedBio": "Votre bio optimisée",
     "readyToUpdate": "Prêt à mettre à jour votre profil",
-    "generateButton": "Générer une bio"
+    "generateButton": "Générer une bio",
+    "resultPlaceholder": "Fournissez des détails pour générer votre bio",
+    "saveType": "Bio",
+    "platform": "Plateforme",
+    "detailsLabel": "Détails du profil",
+    "detailsPlaceholder": "Par exemple, votre bio actuelle, type de contenu, fréquence de publication, engagement, nombre d'abonnés, etc."
   },
   "captionTool": {
     "title": "Générateur de légendes magiques",
@@ -121,5 +142,25 @@
     "copyOrSave": "Copiez ou enregistrez votre préféré",
     "saveType": "Légende visuelle",
     "resultPlaceholder": "Téléchargez une image pour générer des hashtags"
+  },
+  "LanguageSelector": {
+    "englishUS": "Anglais",
+    "frenchCA": "Français (Canada)"
+  },
+  "dashboard": {
+    "toolsHeading": "Studio de contenu IA",
+    "toolsDescription": "Choisissez un outil pour dynamiser vos réseaux sociaux",
+    "bio": "Optimiseur de bio de profil",
+    "caption": "Générateur de légendes magiques",
+    "comment": "Générateur de commentaires",
+    "remix": "Remixer le contenu",
+    "roast": "Roast de profil",
+    "vision": "Générateur de légendes visuelles"
+  },
+  "commonTool": {
+    "describeFirst": "Veuillez d'abord décrire {{tool}} en fournissant {{context}}.",
+    "apiKeyExceeded": "Votre clé API a dépassé sa limite d'utilisation.",
+    "success": "{{tool}} généré avec succès !",
+    "failed": "Échec de la génération de {{tool}}. Veuillez réessayer."
   }
 }

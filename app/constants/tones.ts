@@ -1,10 +1,9 @@
-
 /**
  * Copyright (c) 2026 Winplaybox
  * All rights reserved.
  *
  * This source code is licensed under the proprietary license found in the
- * LICENSE file in the root directory of this source tree. 
+ * LICENSE file in the root directory of this source tree.
  * Unauthorized copying of this file, via any medium, is strictly prohibited.
  *
  * Proprietary and confidential.
@@ -12,15 +11,15 @@
 /**
  * Tone Configuration
  * Centralized management of content tones/styles
- * 
+ *
  * Tones are loaded from environment variables (EXPO_PUBLIC_TONES) with fallback to defaults
  * To update tones, modify the .env file or set EXPO_PUBLIC_TONES environment variable
  */
 
 export interface Tone {
-  value: string;
-  label: string;
-  description?: string;
+    value: string;
+    label: string;
+    description?: string;
 }
 
 // // Default tones (fallback if env var is not set)
@@ -88,14 +87,14 @@ export const TONES: Tone[] = JSON.parse(process.env.EXPO_PUBLIC_TONES?.trim() ||
  * Get tone by value
  */
 export const getTone = (value: string): Tone | undefined => {
-  return TONES.find((tone) => tone.value === value);
+    return TONES.find((tone) => tone.value === value);
 };
 
 /**
  * Get tone label
  */
 export const getToneLabel = (toneValue: string): string => {
-  return getTone(toneValue)?.label || toneValue;
+    return getTone(toneValue)?.label || toneValue;
 };
 
 /**

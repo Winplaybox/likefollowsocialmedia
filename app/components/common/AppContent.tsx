@@ -10,11 +10,11 @@
  */
 import React from 'react';
 
-interface AppContainerProps {
+interface AppContentProps {
     children: React.ReactNode;
     className?: string;
 }
 
-export default function AppContainer({children, className = ''}: AppContainerProps) {
-    return <div className={`min-h-screen flex flex-col overflow-y-auto bg-[#050505] ${className}`}>{children}</div>;
+export default function AppContent({children, className = ''}: AppContentProps) {
+    return <div className={`max-w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow ${className}`}>{children}</div>;
 }

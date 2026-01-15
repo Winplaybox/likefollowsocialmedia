@@ -1,0 +1,174 @@
+{
+  "features": {
+    "vision": {
+      "title": "Vision",
+      "subtitle": "Image-to-Hashtag",
+      "description": "Upload any photo and get 30 viral, SEO-optimized hashtags instantly."
+    },
+    "content": {
+      "title": "Content",
+      "subtitle": "Magic Caption Generator",
+      "description": "Generate engaging captions that drive likes, comments, and shares."
+    },
+    "bio": {
+      "title": "Bio",
+      "subtitle": "Profile Optimizer",
+      "description": "Craft the perfect bio that converts visitors into followers."
+    },
+    "engagement": {
+      "title": "Engagement",
+      "subtitle": "AI Comment Wingman",
+      "description": "Get smart reply suggestions to boost engagement and build community."
+    },
+    "remix": {
+      "title": "Remix",
+      "subtitle": "One Post, Everywhere",
+      "description": "Adapt your content for Instagram, TikTok, and YouTube in one click."
+    },
+    "roast": {
+      "title": "Roast",
+      "subtitle": "Profile Audit",
+      "description": "Get brutally honest feedback to level up your social media game."
+    }
+  },
+  "home": {
+    "welcome": "Go Viral with",
+    "subtitle": "AI-Powered",
+    "content": "Content",
+    "description": "Generate trending hashtags, viral captions, and optimized bios for Instagram, TikTok, and YouTube.100% free, powered by AI.",
+    "trusted": "Trusted by 10,000+ creators • 100% Free • No Credit Card",
+    "tryAllTools": "Try All Tools Now",
+    "footer": "© {{year}} HashtagHero. Powered by AI. Built for creators.",
+    "goToDashboard": "Start Creating for Free"
+  },
+  "app": {
+    "title1": "AI",
+    "title2": "Hashtag",
+    "titleHero": "Hero",
+    "dashboard": "Dashboard",
+    "back": "Back",
+    "dashboardDesc": "Generate bios, captions, comments, and more for your favorite social platforms.",
+    "viewWishlist": "Wishlist",
+    "settings": "Settings",
+    "history": "History",
+    "clearAll": "Clear All",
+    "yourWishlist": "Your Wishlist",
+    "savedItemsDesc": "Saved hashtags, captions, and more",
+    "noSavedItems": "No saved items yet",
+    "startGenerating": "Start generating content and save your favorites here",
+    "goToDashboard": "Go to Dashboard",
+    "homeTitle": "LikeFollow: Social Media AI Tools",
+    "homeDesc": "Generate bios, captions, comments, and more for your favorite social platforms.",
+    "getStarted": "Get Started",
+    "homeHeroTitle": "Go Viral with",
+    "homeHeroSubtitle": "AI-Powered",
+    "homeHeroContent": "Content",
+    "homeDescription": "Generate trending hashtags, viral captions, and optimized bios for Instagram, TikTok, and YouTube. 100% free, powered by AI.",
+    "startCreating": "Start Creating for Free",
+    "copy": "Copy",
+    "save": "Save",
+    "clear": "Clear",
+    "modelSettings": "Model Settings",
+    "model": "AI Model",
+    "selectModel": "Select AI Model",
+    "apiKey": "API Key",
+    "enterApiKey": "Enter your API key",
+    "saveSettings": "Save your settings to use your preferred AI model and API key.",
+    "copiedToClipboard": "Copied to clipboard!",
+    "savedToWishlist": "Saved to wishlist!",
+    "aboutWinplaybox": "About winplaybox",
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "bioTool": {
+    "title": "Profile Bio Optimizer",
+    "description": "Create a bio that converts visitors into followers",
+    "optimizedBio": "Your Optimized Bio",
+    "readyToUpdate": "Ready to update your profile",
+    "generateButton": "Generate Bio",
+    "resultPlaceholder": "Provide details to generate your bio",
+    "saveType": "Bio",
+    "platform": "Platform",
+    "detailsLabel": "Profile Details",
+    "detailsPlaceholder": "E.g., Your current bio, content type, posting frequency, engagement, follower count, etc."
+  },
+  "captionTool": {
+    "title": "Magic Caption Generator",
+    "description": "Create engaging captions that drive engagement",
+    "platform": "Platform",
+    "tone": "Tone",
+    "describeLabel": "Describe Your Content",
+    "describePlaceholder": "E.g., Morning coffee at a cozy cafe, showing latte art",
+    "generateButton": "Generate Caption",
+    "generatedCaption": "Your Caption",
+    "readyToPost": "Ready to post",
+    "saveType": "Caption",
+    "resultPlaceholder": "Provide details to generate your caption"
+  },
+  "commentTool": {
+    "title": "Comment Generator",
+    "description": "Get AI-powered comment suggestions for any post",
+    "contextLabel": "Post Context",
+    "contextPlaceholder": "E.g., A friend just posted a photo of their new puppy",
+    "generateButton": "Generate Comments",
+    "suggestedComments": "Suggested Comments",
+    "copyOrSave": "Copy or save your favorite",
+    "saveType": "Comment",
+    "resultPlaceholder": "Describe a post to get comment suggestions"
+  },
+  "remixTool": {
+    "title": "Remix Content",
+    "description": "Adapt content for {{platforms}}.",
+    "contentLabel": "Post Content",
+    "contentPlaceholder": "Paste your post content here...",
+    "generateButton": "Remix for All Platforms",
+    "saveType": "Remix - {{platform}}",
+    "resultPlaceholder": "Enter your post to remix it for all platforms"
+  },
+  "roastTool": {
+    "title": "Profile Roast",
+    "description": "Get brutally honest feedback to level up your game",
+    "detailsLabel": "Profile Details",
+    "detailsPlaceholder": "Share details about your profile: bio, content type, posting frequency, engagement, follower count, etc. The more details, the better the roast!",
+    "generateButton": "Generate Roast",
+    "resultTitle": "Roast Result",
+    "copyOrSave": "Copy or save your favorite roast",
+    "saveType": "Profile Roast",
+    "resultPlaceholder": "Share your profile details to get roasted"
+  },
+  "visionTool": {
+    "title": "Vision Caption Generator",
+    "description": "Describe your image and get a creative caption",
+    "descriptionLabel": "Image Description",
+    "descriptionPlaceholder": "E.g., A sunset over the mountains with a dog in the foreground",
+    "generateButton": "Generate Hashtags",
+    "resultTitle": "Trending Hashtags",
+    "copyOrSave": "Copy viral hashtags for your post",
+    "saveType": "Vision Hashtags",
+    "resultPlaceholder": "Upload an image to generate hashtags",
+    "uploadImage": "Upload Image",
+    "changeImage": "Change Image",
+    "imageRequired": "Please upload an image first"
+  },
+  "LanguageSelector": {
+    "englishUS": "English",
+    "frenchCA": "French (Canada)"
+  },
+  "dashboard": {
+    "toolsHeading": "AI Content Studio",
+    "toolsDescription": "Choose a tool to supercharge your social media",
+    "bio": "Profile Bio Optimizer",
+    "caption": "Magic Caption Generator",
+    "comment": "Comment Generator",
+    "remix": "Remix Content",
+    "roast": "Profile Roast",
+    "vision": "Vision Caption Generator"
+  },
+  "commonTool": {
+    "describeFirst": "Please provide {{context}} to generate {{tool}}.",
+    "apiKeyExceeded": "Your API key has exceeded its usage limits. Please update your API key in the settings to continue using this feature.",
+    "success": "{{tool}} generated successfully.",
+    "failed": "Failed to generate {{tool}}. Please try again.",
+    "analyzing": "Analyzing image..."
+  }
+}

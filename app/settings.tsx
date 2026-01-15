@@ -9,12 +9,15 @@
  * Proprietary and confidential.
  */
 
+import AppLayout from '@/components/common/AppLayout';
+import Typewriter from '@/components/ui/Typewriter';
+import {cn} from '@/lib/utils';
+import {NameSpace} from '@/types/Enums';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {motion} from 'framer-motion';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import AppLayout from './components/common/AppLayout';
-import {NameSpace} from './types/Enums';
+import {Pressable, Text, TextInput, View} from 'react-native';
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from 'react-native-reanimated';
 
 interface ModelOption {
     key: string;
@@ -29,6 +32,20 @@ export default function Settings() {
     const [apiKey, setApiKey] = useState('');
     const [saved, setSaved] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const opacity = useSharedValue(0);
+    const translateY = useSharedValue(30);
+
+    useEffect(() => {
+        opacity.value = withTiming(1, {duration: 500});
+        translateY.value = withTiming(0, {duration: 500});
+    }, []);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value,
+        transform: [{translateY: translateY.value}],
+    }));
+
     // Model-specific API key length requirements from MODELS
     const apiKeyLengths: Record<string, number> = Object.fromEntries(MODELS.map((m: {key: any; length: any}) => [m.key, m.length]));
 
@@ -69,54 +86,57 @@ export default function Settings() {
 
     return (
         <AppLayout showBack showWishlist>
-            <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} className='py-20'>
-                <div className='mb-8'>
-                    <h1 className='text-3xl sm:text-4xl font-bold mb-2'>{t('app.modelSettings')}</h1>
-                    <p className='text-[#A1A1AA]'>{t('app.saveSettings')}</p>
-                </div>
-                <div className='space-y-6 bg-[#0A0A0A] border border-white/10 rounded-2xl p-8'>
-                    <div>
-                        <label className='block text-sm font-medium mb-2'>{t('app.model')}</label>
-                        <select
-                            value={model}
-                            onChange={(e) => setModel(e.target.value)}
-                            className='w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-[#CCFF00] focus:ring-1 focus:ring-[#CCFF00] outline-none transition-all'
-                        >
-                            {MODELS.map((m: ModelOption) => (
-                                <option key={m.key} value={m.key}>
-                                    {m.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className='block text-sm font-medium mb-2'>{t('app.apiKey')}</label>
-                        <input
+            <Animated.View style={animatedStyle} className='py-20 relative z-10'>
+                <View className='mb-16'>
+                    <Typewriter
+                        text={t('app.modelSettings')}
+                        speed={70}
+                        className='text-[54px] font-[450] mb-4 text-[#121317] tracking-tight leading-[1.1]'
+                    />
+                    <Text className='text-[#45474D] text-xl font-normal tracking-tight'>{t('app.saveSettings')}</Text>
+                </View>
+
+                <View className='gap-10 bg-white border border-[#E1E6EC] rounded-[48px] p-10 sm:p-14 relative overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.06)]'>
+                    <View>
+                        <Text className='text-[11px] font-[450] mb-4 text-[#45474D] uppercase tracking-[0.15em]'>{t('app.model')}</Text>
+                        <View className='w-full px-6 py-5 bg-[#F8F9FC] border border-[#E1E6EC] rounded-[24px]'>
+                            <Text className='text-[#121317] font-normal text-lg'>
+                                {MODELS.find((m: ModelOption) => m.key === model)?.label || 'Select Model'}
+                            </Text>
+                        </View>
+                    </View>
+                    <View>
+                        <Text className='text-[11px] font-[450] mb-4 text-[#45474D] uppercase tracking-[0.15em]'>{t('app.apiKey')}</Text>
+                        <TextInput
                             value={apiKey}
-                            onChange={(e) => setApiKey(e.target.value)}
+                            onChangeText={setApiKey}
                             placeholder={t('app.apiKey')}
-                            className='w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl focus:border-[#CCFF00] focus:ring-1 focus:ring-[#CCFF00] outline-none transition-all'
+                            placeholderTextColor='#B2BBC5'
+                            className='w-full px-6 py-5 bg-[#F8F9FC] border border-[#E1E6EC] rounded-[24px] text-[#121317] font-normal text-lg'
                         />
-                    </div>
-                    <button
-                        onClick={handleSave}
-                        className='w-full px-8 py-4 bg-[#CCFF00] text-black font-bold rounded-xl hover:bg-[#B3E600] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                    </View>
+                    <Pressable
+                        onPress={handleSave}
                         disabled={!isApiKeyValid}
+                        className={cn(
+                            'pill w-full transition-all',
+                            !isApiKeyValid ? 'bg-[#E1E6EC] opacity-50' : 'bg-[#121317] active:scale-95 shadow-lg'
+                        )}
                     >
-                        {t('app.saveSettings')}
-                    </button>
+                        <Text className='text-white tracking-tight'>{t('app.saveSettings')}</Text>
+                    </Pressable>
                     {error && (
-                        <div className='mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm text-center'>
-                            {error}
-                        </div>
+                        <View className='mt-2 p-4 bg-red-50 border border-red-100 rounded-[16px]'>
+                            <Text className='text-[#EA4335] text-sm text-center font-[450]'>{error}</Text>
+                        </View>
                     )}
                     {saved && (
-                        <div className='mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-sm text-center'>
-                            {t('app.saved')}
-                        </div>
+                        <View className='mt-2 p-4 bg-[#E6F4EA] border border-[#CEEAD6] rounded-[16px]'>
+                            <Text className='text-[#1E8E3E] text-sm text-center font-[450]'>{t('app.saved')}</Text>
+                        </View>
                     )}
-                </div>
-            </motion.div>
+                </View>
+            </Animated.View>
         </AppLayout>
     );
 }

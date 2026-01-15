@@ -8,14 +8,14 @@
  *
  * Proprietary and confidential.
  */
-import {Toaster} from '@/app/components/ui/sonner';
-import {useColorScheme} from '@/app/hooks/use-color-scheme';
+import {Toaster} from '@/components/ui/Sonner';
 import '@/global.css';
+import {useColorScheme} from '@/hooks/use-color-scheme';
+import '@/i18n';
 import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {Stack} from 'expo-router';
 import {StatusBar} from 'expo-status-bar';
 import 'react-native-reanimated';
-import './i18n';
 
 export const unstable_settings = {
     // anchor removed
@@ -33,7 +33,7 @@ export default function RootLayout() {
                 <Stack.Screen name='settings' options={{title: 'Settings'}} />
                 <Stack.Screen name='modal' options={{presentation: 'modal', title: 'Modal'}} />
             </Stack>
-            <StatusBar style='auto' />
+            <StatusBar style='auto' hidden={false} />
             <Toaster position='top-center' />
         </ThemeProvider>
     );

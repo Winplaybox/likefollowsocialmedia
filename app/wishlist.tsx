@@ -9,16 +9,19 @@
  * Proprietary and confidential.
  */
 
+import AppLayout from '@/components/common/AppLayout';
+import Typewriter from '@/components/ui/Typewriter';
+import {NameSpace} from '@/types/Enums';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import {useRouter} from 'expo-router';
-import {motion} from 'framer-motion';
-import {Copy, Trash2} from 'lucide-react';
+import {Copy, Trash2} from 'lucide-react-native';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {Pressable, Text, View} from 'react-native';
+import Animated, {useAnimatedStyle, useSharedValue, withDelay, withTiming} from 'react-native-reanimated';
+import Svg, {Path} from 'react-native-svg';
 import {toast} from 'sonner';
-import AppLayout from './components/common/AppLayout';
-import {NameSpace} from './types/Enums';
 
 interface WishlistItem {
     id: number;
@@ -28,14 +31,91 @@ interface WishlistItem {
     characterCount?: number;
     platformLimit?: number;
 }
+
+const WishlistItemCard = ({
+    item,
+    index,
+    onCopy,
+    onDelete,
+}: {
+    item: WishlistItem;
+    index: number;
+    onCopy: (i: WishlistItem) => void;
+    onDelete: (id: number) => void;
+}) => {
+    const opacity = useSharedValue(0);
+    const translateY = useSharedValue(20);
+
+    useEffect(() => {
+        opacity.value = withDelay(index * 50, withTiming(1, {duration: 500}));
+        translateY.value = withDelay(index * 50, withTiming(0, {duration: 500}));
+    }, []);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+        opacity: opacity.value,
+        transform: [{translateY: translateY.value}],
+    }));
+
+    return (
+        <Animated.View
+            style={animatedStyle}
+            className='bg-white border border-[#E1E6EC] rounded-[36px] p-8 relative overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
+        >
+            <View className='flex flex-row items-start justify-between gap-4 mb-6'>
+                <View>
+                    <View className='px-4 py-1.5 bg-[#E8F0FE] rounded-full mb-3 inline-flex self-start'>
+                        <Text className='text-[#4285F4] text-[11px] font-[500] uppercase tracking-wider'>{item.type}</Text>
+                    </View>
+                    <Text className='text-[13px] text-[#45474D] font-[450] tracking-tight'>
+                        {new Date(item.timestamp).toLocaleString()}
+                    </Text>
+                </View>
+                <View className='flex flex-row gap-4'>
+                    <Pressable
+                        onPress={() => onCopy(item)}
+                        className='w-12 h-12 bg-[#F8F9FC] border border-[#E1E6EC] rounded-full flex items-center justify-center active:bg-[#EFF2F7]'
+                    >
+                        <Copy size={20} color='#121317' strokeWidth={1.5} />
+                    </Pressable>
+                    <Pressable
+                        onPress={() => onDelete(item.id)}
+                        className='w-12 h-12 bg-red-50 border border-red-100 rounded-full flex items-center justify-center active:bg-red-100'
+                    >
+                        <Trash2 size={20} color='#EA4335' strokeWidth={1.5} />
+                    </Pressable>
+                </View>
+            </View>
+            <View className='bg-[#F8F9FC] rounded-[24px] p-8 border border-[#E1E6EC]'>
+                <Text className='text-[#121317] font-normal text-lg leading-relaxed'>{item.content}</Text>
+            </View>
+            {item.characterCount && (
+                <View className='mt-6 px-2 flex flex-row items-center justify-between'>
+                    <Text className='text-[12px] text-[#45474D] font-[450] uppercase tracking-wider'>{item.characterCount} characters</Text>
+                    {item.platformLimit && <Text className='text-[12px] text-[#4285F4] font-[450]'>MAX {item.platformLimit}</Text>}
+                </View>
+            )}
+        </Animated.View>
+    );
+};
+
 export default function Wishlist() {
     const {t} = useTranslation(NameSpace.Common);
     const [items, setItems] = useState<WishlistItem[]>([]);
     const router = useRouter();
 
+    const emptyOpacity = useSharedValue(0);
+    const emptyScale = useSharedValue(0.95);
+
     useEffect(() => {
         loadWishlist();
+        emptyOpacity.value = withTiming(1, {duration: 500});
+        emptyScale.value = withTiming(1, {duration: 500});
     }, []);
+
+    const emptyStyle = useAnimatedStyle(() => ({
+        opacity: emptyOpacity.value,
+        transform: [{scale: emptyScale.value}],
+    }));
 
     const loadWishlist = async () => {
         const saved = await AsyncStorage.getItem('hashtagHeroWishlist');
@@ -68,92 +148,55 @@ export default function Wishlist() {
             showSettings
             extraButton={
                 items.length > 0 && (
-                    <button
-                        onClick={clearAll}
+                    <Pressable
+                        onPress={clearAll}
                         data-testid='clear-all-button'
-                        className='px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-full hover:bg-red-500/20 transition-all text-sm'
+                        className='pill-sm px-6 bg-red-50 border border-red-100 shadow-sm active:bg-red-100'
                     >
-                        {t('app.clearAll')}
-                    </button>
+                        <Text className='text-[#EA4335] text-[11px] font-[450] uppercase tracking-wider'>{t('app.clearAll')}</Text>
+                    </Pressable>
                 )
             }
         >
-            <div className='mb-8'>
-                <h1 className='text-3xl sm:text-4xl font-bold mb-2'>{t('app.yourWishlist')}</h1>
-                <p className='text-[#A1A1AA]'>{t('app.savedItemsDesc')}</p>
-            </div>
+            <View className='mb-16'>
+                <Typewriter
+                    text={t('app.yourWishlist')}
+                    speed={70}
+                    className='text-[54px] font-[450] mb-4 text-[#121317] tracking-tight leading-[1.1]'
+                />
+                <Text className='text-[#45474D] text-xl font-normal tracking-tight'>{t('app.savedItemsDesc')}</Text>
+            </View>
 
             {items.length === 0 ? (
-                <motion.div initial={{opacity: 0, y: 20}} animate={{opacity: 1, y: 0}} className='text-center py-20'>
-                    <div className='inline-flex p-6 bg-white/5 rounded-full mb-6'>
-                        <svg className='w-16 h-16 text-[#A1A1AA]' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
-                            <path
+                <View style={emptyStyle} className='glass rounded-[2rem] py-24 items-center justify-center'>
+                    <View className='p-8 bg-white/5 rounded-full mb-8 relative'>
+                        <View className='absolute inset-0 bg-[#CCFF00]/20 blur-2xl rounded-full' />
+                        <Svg width={64} height={64} viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                            <Path
                                 strokeLinecap='round'
                                 strokeLinejoin='round'
                                 strokeWidth={1.5}
+                                stroke='#A1A1AA'
                                 d='M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z'
                             />
-                        </svg>
-                    </div>
-                    <h2 className='text-2xl font-bold mb-2'>{t('app.noSavedItems')}</h2>
-                    <p className='text-[#A1A1AA] mb-6'>{t('app.startGenerating')}</p>
-                    <button
-                        onClick={() => router.push('/dashboard')}
+                        </Svg>
+                    </View>
+                    <Text className='text-black text-4xl font-black mb-4 tracking-tight'>{t('app.noSavedItems')}</Text>
+                    <Text className='text-black/40 text-lg mb-12 max-w-md text-center font-medium'>{t('app.startGenerating')}</Text>
+                    <Pressable
+                        onPress={() => router.push('/dashboard')}
                         data-testid='go-to-dashboard-button'
-                        className='px-8 py-4 bg-[#CCFF00] text-black font-bold rounded-full hover:bg-[#B3E600] transition-all'
+                        className='px-12 py-5 bg-[#00F0FF] rounded-full shadow-[0_10px_30px_rgba(0,240,255,0.3)]'
                     >
-                        {t('app.goToDashboard')}
-                    </button>
-                </motion.div>
+                        <Text className='text-white font-black text-center text-lg'>{t('app.goToDashboard')}</Text>
+                    </Pressable>
+                </View>
             ) : (
-                <div className='space-y-4'>
+                <View className='flex flex-col gap-6'>
                     {items.map((item, index) => (
-                        <motion.div
-                            key={item.id}
-                            initial={{opacity: 0, x: -20}}
-                            animate={{opacity: 1, x: 0}}
-                            transition={{delay: index * 0.05}}
-                            data-testid={`wishlist-item-${index}`}
-                            className='bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 hover:border-[#CCFF00]/30 transition-all'
-                        >
-                            <div className='flex items-start justify-between gap-4 mb-4'>
-                                <div>
-                                    <span className='inline-block px-3 py-1 bg-[#CCFF00]/10 text-[#CCFF00] text-xs font-mono rounded-full mb-2'>
-                                        {item.type}
-                                    </span>
-                                    <p className='text-sm text-[#A1A1AA]'>{new Date(item.timestamp).toLocaleString()}</p>
-                                </div>
-                                <div className='flex gap-2'>
-                                    <button
-                                        onClick={() => handleCopy(item)}
-                                        data-testid={`copy-item-${index}`}
-                                        className='p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all'
-                                        title='Copy'
-                                    >
-                                        <Copy className='w-4 h-4' />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(item.id)}
-                                        data-testid={`delete-item-${index}`}
-                                        className='p-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg transition-all'
-                                        title='Delete'
-                                    >
-                                        <Trash2 className='w-4 h-4' />
-                                    </button>
-                                </div>
-                            </div>
-                            <div className='bg-black/30 rounded-lg p-4'>
-                                <p className='text-white whitespace-pre-wrap font-mono text-sm leading-relaxed'>{item.content}</p>
-                            </div>
-                            {item.characterCount && (
-                                <div className='mt-4 text-xs text-[#A1A1AA]'>
-                                    {item.characterCount} characters
-                                    {item.platformLimit && ` / ${item.platformLimit} limit`}
-                                </div>
-                            )}
-                        </motion.div>
+                        <WishlistItemCard key={item.id} item={item} index={index} onCopy={handleCopy} onDelete={handleDelete} />
                     ))}
-                </div>
+                </View>
             )}
         </AppLayout>
     );
